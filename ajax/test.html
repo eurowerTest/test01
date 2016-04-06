@@ -1,0 +1,50 @@
+<html>
+	<script>
+		// On va chercher le texte enregistré dans la base de donnée 
+		var xmlhttp = new XMLHttpRequest(); 
+		var txt;
+       	xmlhttp.onreadystatechange = function() {
+           	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+              	document.getElementById("change").innerHTML = xmlhttp.responseText;
+              	txt = xmlhttp.responseText;
+            }
+        };
+        xmlhttp.open("GET","getInfo.php", true);
+        xmlhttp.send();
+		
+		function change(){		// On change le type de champ quand l'utilisateur clique
+		
+			document.getElementById("change2").innerHTML = "<input id='input' onblur='update()' value='"+txt+"'>";	
+			document.getElementById("input").focus();
+			
+			document.getElementById("input").addEventListener('keydown',function(e){
+    		if (e.which == 13) 
+    			this.blur();
+			});
+		}
+		//On met à jour quand l'utilisateur enlève le focus du champ de saisie en envoyant le texte rentré dans la base de donnée.
+		function update(){			
+			xmlhttp.onreadystatechange = function() {											
+           		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+             	 	document.getElementById("change2").innerHTML = xmlhttp.responseText;
+           		}
+        	};
+        	txt=document.getElementById("input").value;
+        	xmlhttp.open("GET","sendInfo.php?txt="+document.getElementById("input").value, true); // On envoie le texte entré dans la base de donné
+        	xmlhttp.send(); // Et on récupère un formatage avec l'id ="change" et du texte vide pour laisser place au texte de la BDD
+		}
+		
+	</script>
+
+<body>
+<div id="change2">
+	<div id="change" onclick="change()"></div>
+</div>
+</br>
+</br>
+<p id='test'></p>
+</body>
+
+</html>
+
+
